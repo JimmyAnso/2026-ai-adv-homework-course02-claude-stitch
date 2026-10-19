@@ -40,3 +40,6 @@ coverage/
 public/css/output.css
 qa.md
 package-lock.json
+
+# E2E 截圖（Playwright MCP）
+e2e-artifacts/

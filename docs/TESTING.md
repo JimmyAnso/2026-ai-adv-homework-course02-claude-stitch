@@ -246,3 +246,27 @@ it('should work with session ID', async () => {
 - 不需要管理埠號衝突
 - 不會觸發 `server.js` 中的 `app.listen()`
 - `database.js` 在 `require('../app')` 時即初始化（建表 + 種子資料）
+
+## E2E 測試（綠界結帳）
+
+以 Claude Code 的專案 skill `e2e-ecpay-checkout` 執行，透過 Playwright MCP 操作真實瀏覽器，走完「登入 → 加入購物車 → 結帳 → 綠界網路ATM（臺灣土地銀行）→ 付款完成」並驗證訂單變成 `paid`。
+
+### 前置條件
+
+- `.mcp.json` 已設定 playwright MCP；第一次使用需重新啟動 Claude Code，並在 `/mcp` 核准
+- 本機已安裝 Google Chrome（Playwright MCP 預設使用 Chrome）
+- `.env` 含 `JWT_SECRET`、`ADMIN_EMAIL`、`ADMIN_PASSWORD`，且 `ECPAY_ENV=staging`（非 staging 時 skill 會拒絕執行）
+
+### 執行
+
+在 Claude Code 輸入 `/e2e-ecpay-checkout`，或直接說「跑結帳 E2E」。
+
+- 3001 沒有啟動時，skill 會自行啟動，並在測試成功後關閉；原本就開著的伺服器不會被關閉
+- 截圖存放於 `e2e-artifacts/<時間戳>/`（`01-home` ～ `09-order-paid`，已加入 `.gitignore`），結束時會逐張列在回報中
+- 流程定義見 `.claude/skills/e2e-ecpay-checkout/SKILL.md`
+
+### 注意事項
+
+- 付款發生在綠界測試環境，不會真的扣款
+- 綠界測試環境偶爾會停在「交易資料傳輸中」（`Common/DoAutoSubmitForm`）；skill 會等待最多 90 秒並自動重試最多 2 次，重試留下的訂單會停在「待付款」
+- E2E 會寫入開發用的 `database.sqlite`（新增訂單、清空 admin 的購物車）

@@ -8,6 +8,7 @@
 - 訂單時間顯示少 8 小時：SQLite 存的 UTC 時間未帶時區，前台訂單詳情、我的訂單與後台訂單管理改用 `api.js` 的 `formatDate` / `formatDateTime`，以台北時間顯示
 
 ### Added
+- E2E 測試 skill `e2e-ecpay-checkout`（`.claude/skills/`）：以 Playwright MCP 走完登入、加入購物車、結帳、綠界網路ATM（臺灣土地銀行）付款並驗證訂單已付款，結束附上各步驟截圖（`e2e-artifacts/`）
 - 綠界 ECPay AIO 金流串接：結帳後導向綠界付款頁面完成真實付款流程
 - 新增 `src/utils/ecpay.js` 工具模組：CheckMacValue 簽章產生/驗證、ECPay 專用 URL 編碼、QueryTradeInfo API 查詢
 - 新增 `GET /ecpay/payment/:orderId` 頁面路由：產生自動送出的 ECPay 付款表單
