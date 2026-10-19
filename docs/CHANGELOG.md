@@ -12,6 +12,15 @@
 - 訂單新增 `merchant_trade_no` 欄位：對應綠界 MerchantTradeNo，由 order_no 去除連字號產生
 
 ### Changed
+- 前臺全面改版「夜園靜物」精品風格（設計稿：Stitch 專案「花漾生活 — 精品版前臺」）：
+  - 新配色 token（aubergine / porcelain / driedrose / moss / champagne）與 Bodoni Moda、Noto Serif TC 字型；元件 class（`.btn`、`.field`、`.panel` 等）定義於 `public/css/input.css`
+  - 新增頂部公告列、置中商標導覽列、多欄頁尾（`views/partials/front-footer.ejs`，後台仍沿用 `footer.ejs`）
+  - 首頁：暗調靜物主視覺、分類磚、商品格（實心「加入購物車」按鈕、庫存徽章）、鮮花訂閱區、品牌承諾、顧客評價、電子報區塊；每頁改為 8 筆商品
+  - 商品詳情：新增「立即購買」（加入購物車後前往購物車）與「你可能也會喜歡」推薦區
+  - 購物車／結帳：結帳步驟指示、免運進度條、表格式品項列表
+  - 我的訂單：會員側欄與狀態篩選分頁；訂單詳情：狀態橫幅與進度條
+  - 登入／註冊、404 頁改為圖文分割與全版靜物圖
+  - 編輯用照片存放於 `public/images/editorial/`
 - 結帳頁面（checkout.js）：送出訂單後導向綠界付款頁面，不再直接跳轉訂單詳情
 - 訂單詳情頁面（order-detail.ejs / order-detail.js）：原「付款成功/失敗」模擬按鈕改為「查詢付款狀態」與「前往付款」按鈕；從綠界導回時自動觸發付款狀態查詢
 

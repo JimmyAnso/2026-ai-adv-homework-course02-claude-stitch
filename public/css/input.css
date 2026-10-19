@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* 後台沿用的舊 token */
   --color-rose-primary: #C4727F;
   --color-rose-dark: #A85B67;
   --color-rose-light: #E8A5AE;
@@ -12,10 +13,113 @@
   --color-text-primary: #2C2A28;
   --color-text-secondary: #6B6560;
   --color-text-muted: #9A948E;
+
+  /* 前臺：夜園靜物 */
+  --color-aubergine: #2A1A22;
+  --color-aubergine-light: #3D2833;
+  --color-aubergine-dark: #1F1218;
+  --color-porcelain: #F3F1F1;
+  --color-driedrose: #9E4A5E;
+  --color-driedrose-dark: #8A3F51;
+  --color-moss: #56604A;
+  --color-champagne: #C8B48A;
+  --color-ink: #4A3F44;
+  --color-muted: #8C8186;
+  --color-hairline: #E2DCDD;
+  --color-field: #D6CFD1;
+
+  --font-sans: 'Noto Sans TC', sans-serif;
+  --font-serif: 'Noto Serif TC', serif;
+  --font-bodoni: 'Bodoni Moda', 'Noto Serif TC', serif;
 }
 
 body {
   font-family: 'Noto Sans TC', sans-serif;
   background-color: var(--color-cream);
   color: var(--color-text-primary);
+}
+
+body.front {
+  background-color: var(--color-porcelain);
+  color: var(--color-ink);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1320px] px-4 md:px-8;
+  }
+
+  .heading {
+    @apply font-serif font-medium text-aubergine tracking-[0.04em];
+  }
+
+  .price {
+    @apply font-bodoni text-aubergine tabular-nums;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 h-12 px-6 rounded-sm text-sm font-medium tracking-[0.08em] transition-colors cursor-pointer
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-driedrose
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* 使用方式：class="btn btn-primary" */
+  .btn-primary {
+    @apply bg-aubergine text-white hover:bg-aubergine-light;
+  }
+
+  .btn-outline {
+    @apply border border-aubergine text-aubergine bg-transparent hover:bg-aubergine hover:text-white;
+  }
+
+  .btn-light {
+    @apply bg-porcelain text-aubergine hover:bg-white;
+  }
+
+  .btn-ghost-light {
+    @apply border border-porcelain/70 text-porcelain hover:bg-porcelain hover:text-aubergine;
+  }
+
+  .field-label {
+    @apply block text-sm text-aubergine mb-2;
+  }
+
+  .field {
+    @apply w-full h-12 px-4 bg-white border border-field rounded-sm text-[15px] text-aubergine placeholder:text-muted/70
+      focus:outline-none focus:border-aubergine focus:ring-1 focus:ring-aubergine transition-colors;
+  }
+
+  .field-error {
+    @apply border-driedrose focus:border-driedrose focus:ring-driedrose;
+  }
+
+  .panel {
+    @apply bg-white border border-hairline rounded-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-sm text-xs tracking-[0.08em] text-white;
+  }
+
+  .stepper {
+    @apply inline-flex items-center h-10 border border-field rounded-sm bg-white;
+  }
+
+  .stepper button {
+    @apply w-10 h-full flex items-center justify-center text-aubergine hover:bg-porcelain transition-colors
+      disabled:opacity-30 disabled:cursor-not-allowed;
+  }
+
+  .spinner {
+    @apply w-8 h-8 border-2 border-aubergine border-t-transparent rounded-full animate-spin;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

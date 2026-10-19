@@ -1,90 +1,110 @@
 <div id="app" data-order-id="<%= orderId %>" data-payment-result="<%= paymentResult %>">
-  <h1 class="text-2xl font-bold text-text-primary mb-6" style="font-family: 'Noto Serif TC', serif;">訂單詳情</h1>
-
-  <div v-if="loading" class="flex justify-center py-12">
-    <div class="w-8 h-8 border-4 border-rose-primary border-t-transparent rounded-full animate-spin"></div>
+  <div v-if="loading" class="flex justify-center py-32">
+    <div class="spinner"></div>
   </div>
 
   <template v-else-if="order">
-    <!-- Payment Result Alert -->
-    <div
-      v-if="paymentResult && paymentMessages[paymentResult]"
-      class="rounded-xl p-4 mb-6 text-sm"
-      :class="paymentMessages[paymentResult].cls"
-    >
-      {{ paymentMessages[paymentResult].text }}
-    </div>
-
-    <!-- Order Info -->
-    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
-      <div class="flex items-start justify-between">
-        <div>
-          <p class="text-sm text-text-secondary">訂單編號：{{ order.order_no }}</p>
-          <p class="text-xs text-text-muted mt-1">建立日期：{{ new Date(order.created_at).toLocaleDateString('zh-TW') }}</p>
-        </div>
-        <span
-          class="text-xs px-3 py-1 rounded-full font-medium"
-          :class="statusMap[order.status]?.cls || 'bg-gray-100 text-gray-600'"
-        >
+    <!-- Status banner -->
+    <section class="relative bg-aubergine overflow-hidden">
+      <img src="/images/editorial/bouquet-dark.jpg" alt="" class="absolute inset-y-0 right-0 h-full w-full md:w-1/2 object-cover opacity-40 md:opacity-100" />
+      <div class="absolute inset-0 bg-gradient-to-r from-aubergine via-aubergine/95 md:via-aubergine/80 to-aubergine/30"></div>
+      <div class="relative shell py-14 md:py-16 text-porcelain">
+        <p class="inline-flex items-center gap-2 text-xs tracking-[0.08em] px-3 py-1 border border-champagne/40 text-champagne">
           {{ statusMap[order.status]?.label || order.status }}
-        </span>
+        </p>
+        <h1 class="font-serif text-3xl md:text-4xl tracking-[0.06em] mt-5 max-w-2xl leading-snug">{{ bannerTitle }}</h1>
+        <p class="mt-4 text-porcelain/70 text-sm">
+          訂單編號 <span class="font-bodoni text-porcelain text-base">{{ order.order_no }}</span>
+          <span class="mx-2 text-champagne/50">|</span>
+          {{ new Date(order.created_at).toLocaleString('zh-TW', { dateStyle: 'medium', timeStyle: 'short' }) }}
+        </p>
+        <p
+          v-if="paymentResult && paymentMessages[paymentResult] && !(paymentResult === 'success' && order.status === 'paid')"
+          class="mt-6 inline-block text-sm px-4 py-2"
+          :class="paymentMessages[paymentResult].cls"
+          role="status"
+        >{{ paymentMessages[paymentResult].text }}</p>
       </div>
+    </section>
+
+    <div class="shell pt-8">
+      <nav class="text-[13px] text-muted" aria-label="麵包屑">
+        <a href="/orders" class="hover:text-aubergine">我的訂單</a>
+        <span class="mx-2">/</span>
+        <span class="text-aubergine font-bodoni">{{ order.order_no }}</span>
+      </nav>
     </div>
 
-    <!-- Recipient Info -->
-    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
-      <h2 class="font-medium text-text-primary mb-3">收件資訊</h2>
-      <div class="text-sm space-y-2 text-text-secondary">
-        <p>收件人：{{ order.recipient_name }}</p>
-        <p>Email：{{ order.recipient_email }}</p>
-        <p>地址：{{ order.recipient_address }}</p>
+    <!-- Progress -->
+    <section class="shell pt-6">
+      <ol class="panel px-6 py-8 grid grid-cols-4 text-center text-xs md:text-sm" aria-label="訂單進度">
+        <li v-for="(step, i) in steps" :key="step.label" class="relative flex flex-col items-center gap-3">
+          <span v-if="i > 0" class="absolute top-4 right-1/2 w-full h-px -z-0" :class="step.state === 'todo' ? 'bg-hairline' : 'bg-aubergine'" aria-hidden="true"></span>
+          <span
+            class="relative z-10 w-8 h-8 rounded-full grid place-items-center"
+            :class="{
+              'bg-moss text-white': step.state === 'done',
+              'bg-aubergine text-white ring-4 ring-aubergine/10': step.state === 'current',
+              'bg-white border border-field text-muted': step.state === 'todo',
+              'bg-driedrose text-white': step.state === 'failed'
+            }"
+          >
+            <svg v-if="step.state === 'done'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+            <svg v-else-if="step.state === 'failed'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            <span v-else class="font-bodoni text-xs">{{ i + 1 }}</span>
+          </span>
+          <span :class="step.state === 'todo' ? 'text-muted' : 'text-aubergine'">{{ step.label }}</span>
+        </li>
+      </ol>
+    </section>
+
+    <section class="shell pt-6 grid gap-6 lg:grid-cols-[8fr_4fr] items-start">
+      <div class="panel">
+        <h2 class="heading text-xl px-6 md:px-8 py-5 border-b border-hairline">訂購商品</h2>
+        <ul>
+          <li v-for="item in order.items" :key="item.id" class="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-6 md:px-8 py-5 border-b border-hairline">
+            <span class="font-serif text-aubergine flex-1 min-w-[10rem]">{{ item.product_name }}</span>
+            <span class="text-sm text-muted">NT$ {{ item.product_price.toLocaleString() }} × {{ item.quantity }}</span>
+            <span class="price w-28 text-right">NT$ {{ (item.product_price * item.quantity).toLocaleString() }}</span>
+          </li>
+        </ul>
+        <div class="flex justify-between items-baseline px-6 md:px-8 py-6 bg-porcelain/60">
+          <span class="text-aubergine">實付總計</span>
+          <span class="price text-3xl">NT$ {{ order.total_amount.toLocaleString() }}</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Order Items -->
-    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
-      <h2 class="font-medium text-text-primary mb-3">商品明細</h2>
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-gray-100 text-text-muted">
-            <th class="text-left py-2 font-normal">商品名稱</th>
-            <th class="text-right py-2 font-normal">單價</th>
-            <th class="text-right py-2 font-normal">數量</th>
-            <th class="text-right py-2 font-normal">小計</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in order.items" :key="item.id" class="border-b border-gray-50">
-            <td class="py-3 text-text-primary">{{ item.product_name }}</td>
-            <td class="py-3 text-right text-text-secondary">NT$ {{ item.product_price.toLocaleString() }}</td>
-            <td class="py-3 text-right text-text-secondary">{{ item.quantity }}</td>
-            <td class="py-3 text-right text-text-primary font-medium">NT$ {{ (item.product_price * item.quantity).toLocaleString() }}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3" class="pt-3 text-right font-bold text-text-primary">總計</td>
-            <td class="pt-3 text-right font-bold text-rose-primary text-lg">NT$ {{ order.total_amount.toLocaleString() }}</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+      <div class="space-y-6">
+        <section class="panel p-6">
+          <h2 class="heading text-lg pb-4 mb-4 border-b border-hairline">收件資訊</h2>
+          <dl class="space-y-3 text-sm">
+            <div><dt class="text-xs text-muted">收件人</dt><dd class="text-aubergine mt-0.5">{{ order.recipient_name }}</dd></div>
+            <div><dt class="text-xs text-muted">Email</dt><dd class="text-aubergine mt-0.5 break-all">{{ order.recipient_email }}</dd></div>
+            <div><dt class="text-xs text-muted">地址</dt><dd class="text-aubergine mt-0.5">{{ order.recipient_address }}</dd></div>
+          </dl>
+        </section>
 
-    <!-- Payment Actions -->
-    <div v-if="order.status === 'pending'" class="flex gap-4">
-      <button
-        @click="checkPayment"
-        :disabled="paying"
-        class="bg-sage text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-sage/90 transition-colors disabled:opacity-50"
-      >
-        {{ paying ? '查詢中...' : '查詢付款狀態' }}
-      </button>
-      <a
-        :href="'/ecpay/payment/' + order.id"
-        class="inline-block bg-rose-primary text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-rose-dark transition-colors text-center"
-      >
-        前往付款
-      </a>
-    </div>
+        <section class="panel p-6">
+          <div class="flex items-center justify-between pb-4 mb-4 border-b border-hairline">
+            <h2 class="heading text-lg">付款資訊</h2>
+            <span class="text-xs px-2.5 py-1 rounded-sm" :class="statusMap[order.status]?.cls || 'bg-porcelain text-muted'">{{ statusMap[order.status]?.label || order.status }}</span>
+          </div>
+          <p class="text-sm text-ink">綠界 ECPay</p>
+          <div v-if="order.status === 'pending'" class="mt-6 space-y-3">
+            <a :href="'/ecpay/payment/' + order.id" class="btn btn-primary w-full">前往付款</a>
+            <button type="button" @click="checkPayment" :disabled="paying" class="btn btn-outline w-full">
+              {{ paying ? '查詢中' : '查詢付款狀態' }}
+            </button>
+          </div>
+        </section>
+
+        <a href="/#products" class="btn btn-outline w-full">繼續選購</a>
+      </div>
+    </section>
   </template>
+
+  <div v-else class="shell py-32 text-center">
+    <h1 class="heading text-3xl">找不到這筆訂單</h1>
+    <a href="/orders" class="btn btn-primary mt-8">回到我的訂單</a>
+  </div>
 </div>

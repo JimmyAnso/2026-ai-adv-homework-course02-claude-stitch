@@ -1,26 +1,48 @@
-<header class="sticky top-0 z-50 bg-white shadow-sm border-b border-rose-bg">
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 h-16">
-    <a href="/" class="text-xl font-bold text-rose-primary" style="font-family: 'Noto Serif TC', serif;">
-      花漾生活
+<div class="bg-aubergine text-porcelain text-[13px] tracking-[0.08em]">
+  <div class="shell h-9 flex items-center justify-center text-center">
+    <span class="hidden sm:inline">台北市區下午 3 點前下單，當日送達<span class="mx-3 text-champagne/60">|</span></span>全館滿 NT$500 免運
+  </div>
+</div>
+
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-hairline">
+  <div class="shell h-20 grid grid-cols-[1fr_auto_1fr] items-center">
+    <nav class="flex items-center gap-8 text-sm tracking-[0.08em] text-aubergine" aria-label="主要導覽">
+      <details class="md:hidden relative">
+        <summary class="list-none cursor-pointer p-2 -ml-2" aria-label="開啟選單">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </summary>
+        <div class="absolute left-0 top-12 w-56 panel py-2 shadow-sm">
+          <a href="/#products" class="block px-4 py-2 hover:bg-porcelain">選購花禮</a>
+          <a href="/#subscription" class="block px-4 py-2 hover:bg-porcelain">鮮花訂閱</a>
+          <a href="/#story" class="block px-4 py-2 hover:bg-porcelain">品牌故事</a>
+          <a href="/orders" class="block px-4 py-2 hover:bg-porcelain">我的訂單</a>
+        </div>
+      </details>
+      <a href="/#products" class="hidden md:inline hover:text-driedrose transition-colors">選購花禮</a>
+      <a href="/#subscription" class="hidden md:inline hover:text-driedrose transition-colors">鮮花訂閱</a>
+      <a href="/#story" class="hidden lg:inline hover:text-driedrose transition-colors">品牌故事</a>
+      <a id="orders-link" href="/orders" class="hidden md:inline hover:text-driedrose transition-colors" style="display: none;">我的訂單</a>
+    </nav>
+
+    <a href="/" class="flex flex-col items-center leading-none text-aubergine" aria-label="花漾生活 首頁">
+      <span class="font-serif text-2xl md:text-[26px] font-semibold tracking-[0.2em] pl-[0.2em]">花漾生活</span>
+      <span class="font-bodoni italic text-xs tracking-[0.2em] text-muted mt-1.5">Flower Life</span>
     </a>
 
-    <nav class="flex items-center gap-6 text-sm text-text-secondary">
-      <a href="/" class="hover:text-rose-primary transition-colors">商品列表</a>
-      <a href="/cart" class="hover:text-rose-primary transition-colors relative">
-        購物車
+    <div class="flex items-center justify-end gap-5 text-aubergine">
+      <div id="auth-nav" class="flex items-center gap-4 text-sm">
+        <a href="/login" class="flex items-center gap-2 hover:text-driedrose transition-colors" aria-label="登入">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        </a>
+      </div>
+      <a href="/cart" class="relative hover:text-driedrose transition-colors" aria-label="購物車">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
         <span
           id="cart-badge"
-          class="absolute -top-2 -right-4 bg-rose-primary text-white text-xs rounded-full w-5 h-5 items-center justify-center"
+          class="absolute -top-1.5 -right-2 bg-driedrose text-white text-[11px] leading-none rounded-full min-w-[18px] h-[18px] px-1 items-center justify-center"
           style="display: none;"
         ></span>
       </a>
-      <a id="orders-link" href="/orders" class="hover:text-rose-primary transition-colors" style="display: none;">
-        我的訂單
-      </a>
-    </nav>
-
-    <div id="auth-nav" class="flex items-center gap-4 text-sm">
-      <a href="/login" class="bg-rose-primary text-white px-4 py-1.5 rounded-full hover:bg-rose-dark transition-colors">登入</a>
     </div>
   </div>
 </header>

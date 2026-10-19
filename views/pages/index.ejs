@@ -1,189 +1,225 @@
 <div id="app">
-  <!-- Hero Banner -->
-  <section class="relative bg-gradient-to-r from-blush to-rose-bg rounded-3xl overflow-hidden mb-12 -mx-4 px-4">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center py-12 md:py-20 px-6 md:px-12 gap-8">
-      <div class="flex-1 text-center md:text-left">
-        <h1 class="text-3xl md:text-4xl font-bold text-text-primary mb-4" style="font-family: 'Noto Serif TC', serif;">
-          讓花裝點生活每一刻
+  <!-- Hero -->
+  <section class="relative bg-aubergine overflow-hidden">
+    <img
+      src="/images/editorial/bouquet-dark.jpg"
+      alt="暗色背景前的手綁花束，有玫瑰、牡丹與季節花材"
+      class="absolute inset-0 w-full h-full object-cover object-[70%_center] md:object-right"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-aubergine via-aubergine/75 to-transparent md:via-aubergine/40"></div>
+    <div class="relative shell min-h-[560px] md:min-h-[680px] flex items-end md:items-center py-16">
+      <div class="hero-copy max-w-xl text-porcelain">
+        <h1 class="font-serif font-medium text-[40px] leading-[1.25] md:text-6xl md:leading-[1.2] tracking-[0.06em]">
+          為重要的日子，<br>留一束光。
         </h1>
-        <p class="text-text-secondary mb-6 leading-relaxed">
-          精選當季鮮花，由專業花藝師手工包裝。每一束花都傳遞著溫暖與祝福，為您的生活增添色彩與芬芳。
+        <p class="mt-6 text-porcelain/80 text-base md:text-lg leading-8 max-w-md">
+          每一束花皆由駐店花藝師當日手工製作，台北市區下午 3 點前下單，當天送達。
         </p>
-        <a href="#products" class="inline-block bg-rose-primary text-white px-8 py-3 rounded-full hover:bg-rose-dark transition-colors text-sm">
-          立即選購
-        </a>
-      </div>
-      <div class="flex-1 max-w-md">
-        <img
-          src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600"
-          alt="花束"
-          class="w-full rounded-2xl shadow-lg"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Products -->
-  <section class="mb-12">
-    <div class="text-center mb-8">
-      <h2 class="text-2xl font-bold text-text-primary" style="font-family: 'Noto Serif TC', serif;">
-        &#127801; 精選推薦
-      </h2>
-      <p class="text-text-muted text-sm mt-2">本季最受歡迎的花卉精選</p>
-    </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div
-        v-for="(product, idx) in products.slice(0, 4)"
-        :key="product.id"
-        class="bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-        @click="goToProduct(product.id)"
-      >
-        <div class="aspect-square overflow-hidden">
-          <img
-            :src="product.image_url || featuredImages[idx % 4]"
-            :alt="product.name"
-            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-        <div class="p-3 text-center">
-          <h3 class="font-medium text-sm text-text-primary truncate">{{ product.name }}</h3>
-          <p class="text-rose-primary font-bold mt-1">NT$ {{ product.price.toLocaleString() }}</p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a href="#products" class="btn btn-light min-w-36">選購花禮</a>
+          <a href="#subscription" class="btn btn-ghost-light min-w-36">了解鮮花訂閱</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Brand Story -->
-  <section class="mb-12 bg-white rounded-3xl overflow-hidden shadow-sm">
-    <div class="flex flex-col md:flex-row">
-      <div class="md:w-1/2">
-        <img
-          src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600"
-          alt="花藝師"
-          class="w-full h-64 md:h-full object-cover"
-        />
-      </div>
-      <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-        <h2 class="text-2xl font-bold text-text-primary mb-4" style="font-family: 'Noto Serif TC', serif;">
-          專心，做好一束花的感動
-        </h2>
-        <p class="text-text-secondary leading-relaxed mb-4">
-          花漾生活成立於 2020 年，我們相信每一朵花都有自己的故事。透過專業花藝師的巧手，將大自然的美好帶進您的日常生活中。
-        </p>
-        <p class="text-text-muted text-sm italic">
-          「每一束花，都是一份用心的禮物。」
-        </p>
-      </div>
+  <!-- Collections -->
+  <section class="shell pt-24 md:pt-32">
+    <div class="flex items-end justify-between mb-10">
+      <h2 class="heading text-3xl md:text-4xl">依心意挑選</h2>
+      <a href="#products" class="text-sm tracking-[0.08em] text-aubergine border-b border-aubergine pb-0.5 hover:text-driedrose hover:border-driedrose transition-colors">查看全部</a>
+    </div>
+    <div class="grid gap-4 md:gap-6 md:grid-cols-2 md:grid-rows-2 md:h-[720px]">
+      <a href="#products" class="group relative overflow-hidden md:row-span-2 h-[420px] md:h-auto bg-aubergine">
+        <img src="/images/editorial/col-bouquet.jpg" alt="粉色玫瑰手綁花束" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+        <div class="absolute inset-0 bg-gradient-to-t from-aubergine/90 via-aubergine/40 to-transparent"></div>
+        <div class="absolute left-8 bottom-8 text-porcelain">
+          <h3 class="font-serif text-3xl tracking-[0.08em]">花束</h3>
+          <p class="mt-2 text-sm text-porcelain/80">生日、紀念日、告白，一束說完想說的話</p>
+          <span class="btn btn-light h-10 px-5 mt-5">選購</span>
+        </div>
+      </a>
+      <a href="#products" class="group relative overflow-hidden h-[280px] md:h-auto bg-aubergine">
+        <img src="/images/editorial/col-gift.jpg" alt="香水百合與玫瑰花禮盒" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+        <div class="absolute inset-0 bg-gradient-to-t from-aubergine/90 via-aubergine/40 to-transparent"></div>
+        <div class="absolute left-8 bottom-8 text-porcelain">
+          <h3 class="font-serif text-2xl tracking-[0.08em]">花禮盒</h3>
+          <p class="mt-1 text-sm text-porcelain/80">開幕、喬遷、長輩壽辰的體面心意</p>
+          <span class="btn btn-light h-10 px-5 mt-4">選購</span>
+        </div>
+      </a>
+      <a href="#products" class="group relative overflow-hidden h-[280px] md:h-auto bg-aubergine">
+        <img src="/images/editorial/col-dried.jpg" alt="掛在牆上的乾燥花圈" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+        <div class="absolute inset-0 bg-gradient-to-t from-aubergine/90 via-aubergine/40 to-transparent"></div>
+        <div class="absolute left-8 bottom-8 text-porcelain">
+          <h3 class="font-serif text-2xl tracking-[0.08em]">盆栽與乾燥花</h3>
+          <p class="mt-1 text-sm text-porcelain/80">不用常換水，也能陪你好幾個月</p>
+          <span class="btn btn-light h-10 px-5 mt-4">選購</span>
+        </div>
+      </a>
     </div>
   </section>
 
-  <!-- All Products Grid -->
-  <section id="products" class="mb-12">
-    <div class="text-center mb-8">
-      <h2 class="text-2xl font-bold text-text-primary" style="font-family: 'Noto Serif TC', serif;">
-        探索所有花藝
-      </h2>
-      <p class="text-text-muted text-sm mt-2">找到屬於您的那束花</p>
+  <!-- Products -->
+  <section id="products" class="shell pt-24 md:pt-32 scroll-mt-32">
+    <div class="flex items-end justify-between mb-10">
+      <h2 class="heading text-3xl md:text-4xl">本季精選</h2>
+      <p v-if="!loading && pagination.total" class="text-sm text-muted">共 {{ pagination.total }} 件花禮</p>
     </div>
 
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="w-8 h-8 border-4 border-rose-primary border-t-transparent rounded-full animate-spin"></div>
+    <div v-if="loading" class="flex justify-center py-24">
+      <div class="spinner"></div>
+    </div>
+
+    <div v-else-if="products.length === 0" class="panel py-20 text-center">
+      <p class="heading text-xl">花材正在整理中</p>
+      <p class="text-muted text-sm mt-2">新一季的花禮上架後會出現在這裡。</p>
     </div>
 
     <template v-else>
-      <div v-if="products.length === 0" class="text-center py-12">
-        <div class="text-4xl mb-3">&#127804;</div>
-        <p class="text-text-secondary">目前沒有商品</p>
-        <p class="text-text-muted text-sm">請稍後再來看看</p>
-      </div>
-
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          v-for="product in products"
-          :key="product.id"
-          @click="goToProduct(product.id)"
-          class="bg-white rounded-2xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow group"
-        >
-          <div class="aspect-square overflow-hidden">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-6">
+        <article v-for="product in products" :key="product.id" class="group flex flex-col">
+          <a :href="'/products/' + product.id" class="relative block aspect-[4/5] bg-white overflow-hidden">
             <img
-              :src="product.image_url || 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=400'"
+              :src="(product.image_url || '/images/editorial/col-bouquet.jpg').replace('w=400', 'w=800')"
               :alt="product.name"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             />
-          </div>
-          <div class="p-4">
-            <h3 class="font-medium text-text-primary mb-1 truncate">{{ product.name }}</h3>
-            <p class="text-rose-primary font-bold text-lg mb-3">NT$ {{ product.price.toLocaleString() }}</p>
+            <span v-if="product.stock <= 0" class="badge bg-muted absolute top-3 left-3">已售完</span>
+            <span v-else-if="product.stock <= 20" class="badge bg-driedrose absolute top-3 left-3">僅剩 {{ product.stock }} 件</span>
+          </a>
+          <div class="pt-5 flex flex-col flex-1">
+            <h3 class="font-serif text-[17px] text-aubergine tracking-[0.04em]">
+              <a :href="'/products/' + product.id" class="hover:text-driedrose transition-colors">{{ product.name }}</a>
+            </h3>
+            <p class="mt-1 text-[13px] text-muted line-clamp-1">{{ product.description }}</p>
+            <p class="price text-xl mt-3">NT$ {{ product.price.toLocaleString() }}</p>
             <button
-              @click.stop="addToCart(product)"
+              type="button"
+              @click="addToCart(product)"
               :disabled="product._adding || product.stock <= 0"
-              class="w-full bg-rose-primary text-white py-2 rounded-full text-sm hover:bg-rose-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="btn btn-primary w-full mt-4 h-11 px-3"
             >
-              {{ product.stock <= 0 ? '已售完' : '加入購物車' }}
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+              {{ product.stock <= 0 ? '已售完' : (product._adding ? '加入中' : '加入購物車') }}
             </button>
           </div>
-        </div>
+        </article>
       </div>
 
-      <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1" class="flex justify-center gap-2 mt-8">
+      <nav v-if="pagination.totalPages > 1" class="flex justify-center gap-2 mt-16" aria-label="商品分頁">
         <button
           v-for="p in pagination.totalPages"
           :key="p"
+          type="button"
           @click="loadProducts(p)"
-          class="w-10 h-10 rounded-full text-sm transition-colors"
-          :class="p === pagination.page ? 'bg-rose-primary text-white' : 'bg-white text-text-secondary hover:bg-rose-bg'"
-        >
-          {{ p }}
-        </button>
-      </div>
+          class="w-11 h-11 font-bodoni text-sm border transition-colors cursor-pointer"
+          :class="p === pagination.page ? 'bg-aubergine text-white border-aubergine' : 'bg-white text-aubergine border-hairline hover:border-aubergine'"
+          :aria-current="p === pagination.page ? 'page' : null"
+        >{{ p }}</button>
+      </nav>
     </template>
   </section>
 
-  <!-- Customer Testimonials -->
-  <section class="mb-12">
-    <div class="text-center mb-8">
-      <h2 class="text-2xl font-bold text-text-primary" style="font-family: 'Noto Serif TC', serif;">
-        顧客花束好評分享
-      </h2>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="text-apricot mb-2">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="text-text-secondary text-sm mb-4">「花束非常漂亮，包裝精緻，送給媽媽她超開心的！配送也很準時。」</p>
-        <p class="text-text-muted text-xs">-- 小美</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="text-apricot mb-2">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="text-text-secondary text-sm mb-4">「第二次購買了，品質一如既往的好。花材新鮮，整體搭配很有美感。」</p>
-        <p class="text-text-muted text-xs">-- 阿明</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="text-apricot mb-2">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="text-text-secondary text-sm mb-4">「女朋友收到花束超感動！會再回購的，推薦給大家！」</p>
-        <p class="text-text-muted text-xs">-- 大衛</p>
+  <!-- Subscription -->
+  <section id="subscription" class="bg-aubergine mt-24 md:mt-32 scroll-mt-28">
+    <div class="shell py-20 md:py-28">
+      <div class="border border-champagne/30 p-6 md:p-12 grid gap-10 md:grid-cols-2 md:items-center">
+        <img src="/images/editorial/florist.jpg" alt="花藝師在工作檯上修剪玫瑰與毛茛" class="w-full aspect-[4/3] object-cover" />
+        <div class="text-porcelain">
+          <h2 class="font-serif text-3xl md:text-4xl tracking-[0.06em]">季節鮮花訂閱</h2>
+          <p class="mt-6 text-porcelain/75 leading-8">每月由花藝師依當季花材搭配一束花，直送到府。春有鬱金香與牡丹，夏有繡球與向日葵，秋冬有菊花與聖誕紅。</p>
+          <div class="my-8 py-6 border-y border-champagne/30">
+            <p><span class="font-bodoni text-4xl text-champagne">NT$ 890</span><span class="ml-2 text-sm text-porcelain/70">／月起，訂閱期間免運</span></p>
+            <p class="mt-2 text-xs text-porcelain/50">每月中旬配送，可隨時暫停或取消。</p>
+          </div>
+          <a :href="subscriptionProduct ? '/products/' + subscriptionProduct.id : '#products'" class="btn btn-light min-w-40">開始訂閱</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Service Features -->
-  <section class="mb-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="text-3xl mb-3">&#128666;</div>
-        <h3 class="font-medium text-text-primary mb-1">快速配送</h3>
-        <p class="text-text-muted text-sm">台北市區當日配送</p>
+  <!-- Story & promises -->
+  <section id="story" class="bg-white scroll-mt-28">
+    <div class="shell py-20 md:py-28">
+      <div class="grid gap-10 md:grid-cols-[1fr_1.4fr] md:items-end mb-16">
+        <h2 class="heading text-3xl md:text-4xl leading-tight">專心，<br>做好一束花</h2>
+        <p class="text-ink leading-8 max-w-2xl">花漾生活成立於 2020 年。花藝師每天清晨到花市挑選花材，依訂單一束一束手工包紮，再由專人送到收花的人手上。我們只做來得及當天送出的量。</p>
       </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="text-3xl mb-3">&#127873;</div>
-        <h3 class="font-medium text-text-primary mb-1">精美包裝</h3>
-        <p class="text-text-muted text-sm">每束花都經過精心包裝</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm">
-        <div class="text-3xl mb-3">&#128155;</div>
-        <h3 class="font-medium text-text-primary mb-1">滿額免運</h3>
-        <p class="text-text-muted text-sm">消費滿 NT$ 500 免運費</p>
+      <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <li class="flex gap-4">
+          <svg class="w-7 h-7 shrink-0 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h11v9H2zM13 10h4l3 3v3h-7z"/><circle cx="6" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>
+          <div><p class="font-serif text-aubergine">當日配送</p><p class="text-sm text-muted mt-1">台北市區下午 3 點前下單</p></div>
+        </li>
+        <li class="flex gap-4">
+          <svg class="w-7 h-7 shrink-0 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4-3-7-6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4-3 7-7 10z"/></svg>
+          <div><p class="font-serif text-aubergine">花藝師手作</p><p class="text-sm text-muted mt-1">每束皆為當日製作</p></div>
+        </li>
+        <li class="flex gap-4">
+          <svg class="w-7 h-7 shrink-0 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div><p class="font-serif text-aubergine">安心付款</p><p class="text-sm text-muted mt-1">綠界 ECPay 加密金流</p></div>
+        </li>
+        <li class="flex gap-4">
+          <svg class="w-7 h-7 shrink-0 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18v12H3zM2 6h20v3H2zM12 6v15"/><path d="M12 6c-2-3-6-3-6 0M12 6c2-3 6-3 6 0"/></svg>
+          <div><p class="font-serif text-aubergine">滿額免運</p><p class="text-sm text-muted mt-1">消費滿 NT$500 免運費</p></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="shell pt-24 md:pt-32">
+    <h2 class="heading text-3xl md:text-4xl mb-10">收花的人怎麼說</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <figure class="panel p-8 flex flex-col">
+        <blockquote class="font-serif text-lg leading-8 text-aubergine flex-1">「花束非常漂亮，包裝精緻，送給媽媽她超開心的！配送也很準時。」</blockquote>
+        <figcaption class="mt-6 pt-5 border-t border-hairline text-sm text-muted">小美</figcaption>
+      </figure>
+      <figure class="panel p-8 flex flex-col">
+        <blockquote class="font-serif text-lg leading-8 text-aubergine flex-1">「第二次購買了，品質一如既往的好。花材新鮮，整體搭配很有美感。」</blockquote>
+        <figcaption class="mt-6 pt-5 border-t border-hairline text-sm text-muted">阿明</figcaption>
+      </figure>
+      <figure class="panel p-8 flex flex-col">
+        <blockquote class="font-serif text-lg leading-8 text-aubergine flex-1">「女朋友收到花束超感動！會再回購的，推薦給大家！」</blockquote>
+        <figcaption class="mt-6 pt-5 border-t border-hairline text-sm text-muted">大衛</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="shell pt-24 md:pt-32">
+    <div class="relative overflow-hidden bg-aubergine">
+      <img src="/images/editorial/newsletter.jpg" alt="" class="absolute inset-y-0 right-0 w-full md:w-3/5 h-full object-cover opacity-60 md:opacity-100" />
+      <div class="absolute inset-0 bg-gradient-to-r from-aubergine via-aubergine/90 to-aubergine/20"></div>
+      <div class="relative px-6 py-16 md:px-16 md:py-20 max-w-xl text-porcelain">
+        <h2 class="font-serif text-3xl tracking-[0.06em]">訂閱花漾來信</h2>
+        <p class="mt-4 text-porcelain/75 leading-7">每月一封，介紹當季花材與花藝師的插花筆記。</p>
+        <form @submit.prevent="subscribeNewsletter" class="mt-8 flex flex-col sm:flex-row gap-3">
+          <label for="newsletter-email" class="sr-only">Email</label>
+          <input
+            id="newsletter-email"
+            v-model="newsletterEmail"
+            type="email"
+            required
+            placeholder="輸入你的 Email"
+            class="flex-1 h-12 px-4 bg-transparent border border-porcelain/40 text-porcelain placeholder:text-porcelain/50 focus:outline-none focus:border-porcelain rounded-sm"
+          />
+          <button type="submit" class="btn btn-light">訂閱</button>
+        </form>
       </div>
     </div>
   </section>
 </div>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-copy > * { animation: hero-in 0.9s cubic-bezier(.2,.7,.2,1) both; }
+    .hero-copy > *:nth-child(2) { animation-delay: 0.15s; }
+    .hero-copy > *:nth-child(3) { animation-delay: 0.3s; }
+  }
+  @keyframes hero-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>

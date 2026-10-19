@@ -1,78 +1,131 @@
 <div id="app" data-product-id="<%= productId %>">
-  <div v-if="loading" class="flex justify-center py-12">
-    <div class="w-8 h-8 border-4 border-rose-primary border-t-transparent rounded-full animate-spin"></div>
+  <div v-if="loading" class="flex justify-center py-32">
+    <div class="spinner"></div>
   </div>
 
-  <div v-else-if="notFound" class="text-center py-16">
-    <div class="text-5xl mb-4">&#127804;</div>
-    <h2 class="text-xl font-medium text-text-primary mb-2">找不到此商品</h2>
-    <a href="/" class="text-rose-primary hover:text-rose-dark text-sm">回到首頁</a>
+  <div v-else-if="notFound" class="shell py-32 text-center">
+    <h1 class="heading text-3xl">找不到這件花禮</h1>
+    <p class="text-muted mt-3">它可能已經下架，看看其他當季花禮吧。</p>
+    <a href="/#products" class="btn btn-primary mt-8">選購花禮</a>
   </div>
 
-  <div v-else-if="product" class="flex flex-col md:flex-row gap-8 md:gap-12">
-    <!-- Left: Image -->
-    <div class="md:w-1/2">
-      <div class="rounded-2xl overflow-hidden shadow-sm">
+  <template v-else-if="product">
+    <div class="shell pt-8">
+      <nav class="text-[13px] text-muted" aria-label="麵包屑">
+        <a href="/" class="hover:text-aubergine">首頁</a>
+        <span class="mx-2">/</span>
+        <a href="/#products" class="hover:text-aubergine">花禮</a>
+        <span class="mx-2">/</span>
+        <span class="text-aubergine">{{ product.name }}</span>
+      </nav>
+    </div>
+
+    <section class="shell pt-8 grid gap-10 lg:gap-16 lg:grid-cols-[7fr_5fr]">
+      <div class="bg-white aspect-[4/5] overflow-hidden">
         <img
-          :src="product.image_url || 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600'"
+          :src="(product.image_url || '/images/editorial/col-bouquet.jpg').replace('w=400', 'w=1200')"
           :alt="product.name"
-          class="w-full aspect-square object-cover"
+          class="w-full h-full object-cover"
         />
       </div>
-    </div>
 
-    <!-- Right: Info -->
-    <div class="md:w-1/2">
-      <h1 class="text-2xl md:text-3xl font-bold text-text-primary mb-2" style="font-family: 'Noto Serif TC', serif;">
-        {{ product.name }}
-      </h1>
-      <p class="text-3xl text-rose-primary font-bold mb-4">NT$ {{ product.price.toLocaleString() }}</p>
+      <div class="lg:sticky lg:top-32 lg:self-start">
+        <span v-if="product.stock <= 0" class="badge bg-muted">已售完</span>
+        <span v-else-if="product.stock <= 20" class="badge bg-driedrose">僅剩 {{ product.stock }} 件</span>
 
-      <div class="mb-6">
-        <span class="text-sage text-sm">&#10003; 尚有 {{ product.stock }} 件</span>
-      </div>
+        <h1 class="heading text-3xl md:text-[40px] leading-tight mt-4">{{ product.name }}</h1>
+        <p class="price text-3xl mt-5">NT$ {{ product.price.toLocaleString() }}</p>
 
-      <p class="text-text-secondary leading-relaxed mb-6">{{ product.description }}</p>
+        <p v-if="product.stock > 0" class="flex items-center gap-2 text-sm text-moss mt-4">
+          <span class="w-2 h-2 rounded-full bg-moss"></span>現貨供應，台北市區今日可送達
+        </p>
+        <p v-else class="text-sm text-muted mt-4">這件花禮目前已售完。</p>
 
-      <!-- Quantity Selector -->
-      <div class="flex items-center gap-4 mb-6">
-        <span class="text-sm text-text-secondary">數量</span>
-        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+        <div class="mt-8 pt-8 border-t border-hairline flex gap-3">
+          <div class="stepper h-12" role="group" aria-label="數量">
+            <button type="button" @click="decrease" :disabled="quantity <= 1" aria-label="減少數量">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+            </button>
+            <span class="w-12 text-center font-bodoni text-aubergine" aria-live="polite">{{ quantity }}</span>
+            <button type="button" @click="increase" :disabled="quantity >= product.stock" aria-label="增加數量">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
           <button
-            @click="decrease"
-            class="w-10 h-10 flex items-center justify-center hover:bg-gray-50 text-text-secondary transition-colors"
+            type="button"
+            @click="addToCart"
+            :disabled="adding || product.stock <= 0"
+            class="btn btn-primary flex-1"
           >
-            -
-          </button>
-          <span class="w-12 h-10 flex items-center justify-center text-sm border-x border-gray-200">
-            {{ quantity }}
-          </span>
-          <button
-            @click="increase"
-            class="w-10 h-10 flex items-center justify-center hover:bg-gray-50 text-text-secondary transition-colors"
-          >
-            +
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+            {{ product.stock <= 0 ? '已售完' : (adding ? '加入中' : '加入購物車') }}
           </button>
         </div>
-      </div>
+        <button
+          type="button"
+          @click="buyNow"
+          :disabled="adding || product.stock <= 0"
+          class="btn btn-outline w-full mt-3"
+        >立即購買</button>
 
-      <button
-        @click="addToCart"
-        :disabled="adding || product.stock <= 0"
-        class="w-full bg-rose-primary text-white py-3 rounded-full text-sm font-medium hover:bg-rose-dark transition-colors disabled:opacity-50"
-      >
-        {{ product.stock <= 0 ? '已售完' : '加入購物車' }}
-      </button>
-
-      <!-- Purchase Notes -->
-      <div class="mt-8 bg-blush rounded-xl p-5">
-        <h3 class="font-medium text-text-primary mb-2 text-sm">購買須知</h3>
-        <ul class="text-text-muted text-xs space-y-1.5">
-          <li>- 花材依據季節供應，實際花束可能略有差異</li>
-          <li>- 台北市區可享當日配送服務</li>
-          <li>- 消費滿 NT$ 500 享免運優惠</li>
+        <ul class="grid grid-cols-3 mt-8 py-6 border-y border-hairline text-center text-xs text-muted">
+          <li class="flex flex-col items-center gap-2">
+            <svg class="w-6 h-6 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h11v9H2zM13 10h4l3 3v3h-7z"/><circle cx="6" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>
+            當日配送
+          </li>
+          <li class="flex flex-col items-center gap-2 border-x border-hairline">
+            <svg class="w-6 h-6 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4-3-7-6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4-3 7-7 10z"/></svg>
+            花藝師手作
+          </li>
+          <li class="flex flex-col items-center gap-2">
+            <svg class="w-6 h-6 text-aubergine" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18v12H3zM2 6h20v3H2zM12 6v15"/></svg>
+            滿 NT$500 免運
+          </li>
         </ul>
+
+        <div class="divide-y divide-hairline border-b border-hairline">
+          <details open class="group py-5">
+            <summary class="flex justify-between items-center cursor-pointer list-none font-serif text-aubergine">
+              商品介紹
+              <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p class="mt-4 text-sm leading-7 text-ink">{{ product.description }}</p>
+          </details>
+          <details class="group py-5">
+            <summary class="flex justify-between items-center cursor-pointer list-none font-serif text-aubergine">
+              配送說明
+              <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <ul class="mt-4 text-sm leading-7 text-ink list-disc pl-5">
+              <li>台北市區下午 3 點前下單，當日送達</li>
+              <li>消費滿 NT$500 免運，未滿酌收運費 NT$150</li>
+            </ul>
+          </details>
+          <details class="group py-5">
+            <summary class="flex justify-between items-center cursor-pointer list-none font-serif text-aubergine">
+              購買須知
+              <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p class="mt-4 text-sm leading-7 text-ink">花材依季節供應，實際花束的花色與配材可能略有差異，花藝師會以同等級花材替換。</p>
+          </details>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <section v-if="related.length" class="shell pt-24 md:pt-32">
+      <h2 class="heading text-3xl mb-10">你可能也會喜歡</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-6">
+        <article v-for="item in related" :key="item.id" class="group flex flex-col">
+          <a :href="'/products/' + item.id" class="block aspect-[4/5] bg-white overflow-hidden">
+            <img :src="(item.image_url || '/images/editorial/col-bouquet.jpg').replace('w=400', 'w=800')" :alt="item.name" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+          </a>
+          <h3 class="font-serif text-[17px] text-aubergine tracking-[0.04em] pt-5">
+            <a :href="'/products/' + item.id" class="hover:text-driedrose transition-colors">{{ item.name }}</a>
+          </h3>
+          <p class="price text-xl mt-2">NT$ {{ item.price.toLocaleString() }}</p>
+          <a :href="'/products/' + item.id" class="btn btn-outline w-full mt-4 h-11">查看花禮</a>
+        </article>
+      </div>
+    </section>
+  </template>
 </div>

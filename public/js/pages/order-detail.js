@@ -1,4 +1,4 @@
-const { createApp, ref, onMounted } = Vue;
+const { createApp, ref, computed, onMounted } = Vue;
 
 createApp({
   setup() {
@@ -13,17 +13,42 @@ createApp({
     const paying = ref(false);
 
     const statusMap = {
-      pending: { label: '待付款', cls: 'bg-apricot/20 text-apricot' },
-      paid: { label: '已付款', cls: 'bg-sage/20 text-sage' },
-      failed: { label: '付款失敗', cls: 'bg-red-100 text-red-600' },
+      pending: { label: '待付款', cls: 'bg-driedrose/10 text-driedrose' },
+      paid: { label: '已付款', cls: 'bg-moss/10 text-moss' },
+      failed: { label: '付款失敗', cls: 'bg-porcelain text-muted' },
     };
 
     const paymentMessages = {
-      success: { text: '付款成功！感謝您的購買。', cls: 'bg-sage/10 text-sage border border-sage/20' },
-      failed: { text: '付款失敗，請重試。', cls: 'bg-red-50 text-red-600 border border-red-100' },
-      cancel: { text: '付款已取消。', cls: 'bg-apricot/10 text-apricot border border-apricot/20' },
-      pending: { text: '付款處理中，請點擊「查詢付款狀態」確認結果。', cls: 'bg-apricot/10 text-apricot border border-apricot/20' },
+      success: { text: '付款成功，感謝你的購買。', cls: 'bg-moss text-white' },
+      failed: { text: '付款失敗，請重新前往付款。', cls: 'bg-driedrose text-white' },
+      cancel: { text: '付款已取消。', cls: 'bg-porcelain text-aubergine' },
+      pending: { text: '付款處理中，請點「查詢付款狀態」確認結果。', cls: 'bg-porcelain text-aubergine' },
     };
+
+    const bannerTitle = computed(function () {
+      if (!order.value) return '';
+      if (order.value.status === 'paid') return '付款完成，花藝師已開始準備你的花禮';
+      if (order.value.status === 'failed') return '這筆訂單付款未成功';
+      return '訂單已成立，付款後即開始製作';
+    });
+
+    const steps = computed(function () {
+      const status = order.value && order.value.status;
+      if (status === 'paid') {
+        return [
+          { label: '訂單成立', state: 'done' },
+          { label: '付款完成', state: 'done' },
+          { label: '花藝師製作', state: 'current' },
+          { label: '配送', state: 'todo' },
+        ];
+      }
+      return [
+        { label: '訂單成立', state: 'done' },
+        { label: status === 'failed' ? '付款失敗' : '等待付款', state: status === 'failed' ? 'failed' : 'current' },
+        { label: '花藝師製作', state: 'todo' },
+        { label: '配送', state: 'todo' },
+      ];
+    });
 
     async function checkPayment() {
       if (!order.value || paying.value) return;
@@ -60,6 +85,6 @@ createApp({
       }
     });
 
-    return { order, loading, paying, paymentResult, statusMap, paymentMessages, checkPayment };
+    return { order, loading, paying, paymentResult, statusMap, paymentMessages, bannerTitle, steps, checkPayment };
   }
 }).mount('#app');

@@ -1,40 +1,80 @@
-<div id="app">
-  <h1 class="text-2xl font-bold text-text-primary mb-6" style="font-family: 'Noto Serif TC', serif;">我的訂單</h1>
-
-  <div v-if="loading" class="flex justify-center py-12">
-    <div class="w-8 h-8 border-4 border-rose-primary border-t-transparent rounded-full animate-spin"></div>
-  </div>
-
-  <div v-else-if="orders.length === 0" class="text-center py-12">
-    <div class="text-4xl mb-3">&#128230;</div>
-    <p class="text-text-secondary mb-1">尚無訂單</p>
-    <p class="text-text-muted text-sm mb-4">快去選購喜歡的花束吧！</p>
-    <a href="/" class="inline-block bg-rose-primary text-white px-6 py-2 rounded-full text-sm hover:bg-rose-dark transition-colors">去逛逛</a>
-  </div>
-
-  <div v-else class="space-y-4">
-    <a
-      v-for="order in orders"
-      :key="order.id"
-      :href="'/orders/' + order.id"
-      class="block bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition-shadow"
-    >
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-text-secondary">訂單編號：{{ order.order_no }}</p>
-          <p class="text-xs text-text-muted mt-1">{{ new Date(order.created_at).toLocaleDateString('zh-TW') }}</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <span class="font-bold text-text-primary">NT$ {{ order.total_amount.toLocaleString() }}</span>
-          <span
-            class="text-xs px-3 py-1 rounded-full font-medium"
-            :class="statusMap[order.status]?.cls || 'bg-gray-100 text-gray-600'"
-          >
-            {{ statusMap[order.status]?.label || order.status }}
-          </span>
-          <span class="text-text-muted">&#8594;</span>
+<div id="app" class="shell pt-12">
+  <div class="grid gap-8 lg:grid-cols-[260px_1fr] items-start">
+    <aside class="panel p-6">
+      <div class="flex items-center gap-3 pb-6 border-b border-hairline">
+        <span class="w-11 h-11 bg-aubergine text-porcelain grid place-items-center font-serif text-lg">{{ (user?.name || '花').slice(0, 1) }}</span>
+        <div class="min-w-0">
+          <p class="font-serif text-aubergine truncate">{{ user?.name }}，你好</p>
+          <p class="text-xs text-muted truncate">{{ user?.email }}</p>
         </div>
       </div>
-    </a>
+      <nav class="pt-4 text-sm" aria-label="會員選單">
+        <a href="/orders" class="flex items-center gap-3 px-3 py-2.5 bg-porcelain text-aubergine border-l-2 border-aubergine" aria-current="page">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h4"/></svg>我的訂單
+        </a>
+        <a href="/cart" class="flex items-center gap-3 px-3 py-2.5 text-ink hover:text-aubergine border-l-2 border-transparent">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>購物車
+        </a>
+        <button type="button" onclick="Auth.logout()" class="w-full flex items-center gap-3 px-3 py-2.5 text-muted hover:text-driedrose border-l-2 border-transparent cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg>登出
+        </button>
+      </nav>
+    </aside>
+
+    <div>
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+        <h1 class="heading text-4xl">我的訂單</h1>
+        <div class="flex gap-6 text-sm border-b border-hairline" role="tablist" aria-label="訂單狀態">
+          <button
+            v-for="tab in tabs"
+            :key="tab.value"
+            type="button"
+            role="tab"
+            :aria-selected="filter === tab.value"
+            @click="filter = tab.value"
+            class="pb-2 -mb-px border-b-2 transition-colors cursor-pointer"
+            :class="filter === tab.value ? 'border-aubergine text-aubergine' : 'border-transparent text-muted hover:text-aubergine'"
+          >{{ tab.label }}</button>
+        </div>
+      </div>
+
+      <div v-if="loading" class="flex justify-center py-24">
+        <div class="spinner"></div>
+      </div>
+
+      <div v-else-if="orders.length === 0" class="panel py-20 text-center">
+        <p class="heading text-2xl">還沒有訂單</p>
+        <p class="text-muted mt-3">第一束花，從這裡開始挑。</p>
+        <a href="/#products" class="btn btn-primary mt-8 min-w-40">選購花禮</a>
+      </div>
+
+      <div v-else-if="filteredOrders.length === 0" class="panel py-16 text-center text-muted">
+        沒有「{{ tabs.find(t => t.value === filter).label }}」的訂單。
+      </div>
+
+      <ul v-else class="space-y-4">
+        <li v-for="order in filteredOrders" :key="order.id" class="panel">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 px-6 py-5 border-b border-hairline">
+            <span class="font-bodoni text-lg text-aubergine">{{ order.order_no }}</span>
+            <span class="text-xs text-muted">{{ new Date(order.created_at).toLocaleDateString('zh-TW') }}</span>
+            <span class="text-xs px-2.5 py-1 rounded-sm" :class="statusMap[order.status]?.cls || 'bg-porcelain text-muted'">
+              {{ statusMap[order.status]?.label || order.status }}
+            </span>
+            <span class="ml-auto text-sm text-muted">總計 <span class="price text-2xl ml-1">NT$ {{ order.total_amount.toLocaleString() }}</span></span>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
+            <p class="text-sm text-muted">
+              <template v-if="order.status === 'pending'">尚未完成付款，完成後花藝師才會開始製作。</template>
+              <template v-else-if="order.status === 'paid'">已付款，花藝師正在準備你的花禮。</template>
+              <template v-else>付款未成功，請重新下單或來電 02-2700-0000。</template>
+            </p>
+            <div class="flex gap-3">
+              <a :href="'/orders/' + order.id" class="btn btn-outline h-10 px-5">查看訂單</a>
+              <a v-if="order.status === 'pending'" :href="'/ecpay/payment/' + order.id" class="btn btn-primary h-10 px-5">前往付款</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

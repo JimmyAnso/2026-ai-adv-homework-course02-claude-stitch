@@ -6,15 +6,15 @@ document.addEventListener('DOMContentLoaded', function () {
   if (authNav) {
     if (Auth.isLoggedIn()) {
       const user = Auth.getUser();
-      let html = '';
+      const name = document.createElement('span');
+      name.className = 'hidden sm:inline text-ink';
+      name.textContent = user?.name || '';
+      authNav.innerHTML = '';
       if (Auth.isAdmin()) {
-        html += '<a href="/admin/products" class="text-rose-primary hover:text-rose-dark">後台管理</a>';
+        authNav.insertAdjacentHTML('beforeend', '<a href="/admin/products" class="hidden sm:inline hover:text-driedrose transition-colors">後台管理</a>');
       }
-      html += '<span class="text-text-secondary">' + (user?.name || '') + '</span>';
-      html += '<button onclick="Auth.logout()" class="text-text-muted hover:text-rose-primary transition-colors">登出</button>';
-      authNav.innerHTML = html;
-    } else {
-      authNav.innerHTML = '<a href="/login" class="bg-rose-primary text-white px-4 py-1.5 rounded-full hover:bg-rose-dark transition-colors">登入</a>';
+      authNav.appendChild(name);
+      authNav.insertAdjacentHTML('beforeend', '<button type="button" onclick="Auth.logout()" class="text-muted hover:text-driedrose transition-colors cursor-pointer">登出</button>');
     }
   }
 
