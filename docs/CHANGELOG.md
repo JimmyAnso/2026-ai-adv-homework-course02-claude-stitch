@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- 訂單時間顯示少 8 小時：SQLite 存的 UTC 時間未帶時區，前台訂單詳情、我的訂單與後台訂單管理改用 `api.js` 的 `formatDate` / `formatDateTime`，以台北時間顯示
+
 ### Added
 - 綠界 ECPay AIO 金流串接：結帳後導向綠界付款頁面完成真實付款流程
 - 新增 `src/utils/ecpay.js` 工具模組：CheckMacValue 簽章產生/驗證、ECPay 專用 URL 編碼、QueryTradeInfo API 查詢

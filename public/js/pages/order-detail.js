@@ -85,6 +85,6 @@ createApp({
       }
     });
 
-    return { order, loading, paying, paymentResult, statusMap, paymentMessages, bannerTitle, steps, checkPayment };
+    return { order, loading, paying, paymentResult, statusMap, paymentMessages, bannerTitle, steps, checkPayment, formatDateTime };
   }
 }).mount('#app');

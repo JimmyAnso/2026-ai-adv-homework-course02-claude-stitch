@@ -16,7 +16,7 @@
         <p class="mt-4 text-porcelain/70 text-sm">
           訂單編號 <span class="font-bodoni text-porcelain text-base">{{ order.order_no }}</span>
           <span class="mx-2 text-champagne/50">|</span>
-          {{ new Date(order.created_at).toLocaleString('zh-TW', { dateStyle: 'medium', timeStyle: 'short' }) }}
+          {{ formatDateTime(order.created_at) }}
         </p>
         <p
           v-if="paymentResult && paymentMessages[paymentResult] && !(paymentResult === 'success' && order.status === 'paid')"

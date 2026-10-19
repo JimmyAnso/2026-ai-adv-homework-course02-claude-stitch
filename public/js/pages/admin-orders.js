@@ -58,7 +58,7 @@ createApp({
     return {
       orders, pagination, loading, statusFilter,
       detailVisible, detailOrder, detailLoading,
-      statusMap, loadOrders, viewDetail
+      statusMap, loadOrders, viewDetail, formatDate
     };
   }
 }).mount('#app');

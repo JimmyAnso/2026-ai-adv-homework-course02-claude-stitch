@@ -38,6 +38,6 @@ createApp({
       }
     });
 
-    return { user, orders, loading, statusMap, filter, tabs, filteredOrders };
+    return { user, orders, loading, statusMap, filter, tabs, filteredOrders, formatDate };
   }
 }).mount('#app');
